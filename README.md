@@ -32,19 +32,3 @@ Para facilitar el seguimiento de las clases, las prácticas de laboratorio (en e
 * **📂 RA09: Seguimiento y Gestión de Incidencias en Servicios de Comunicación**
     * *Enfoque:* Configuración y uso de herramientas especializadas en la gestión de incidentes (Sistemas de Ticketing / Monitoreo), métricas de tiempos de respuesta, atención al usuario y documentación de simulación de crisis multiproblema.
 
----
-
-## 📂 Propuesta de Estructura de Directorios para este Repositorio
-
-Para mantener la concordancia exacta con la documentación del Ministerio, los recursos se almacenan bajo la siguiente jerarquía de carpetas:
-
-```text
-├── 📁 RA01_Instalacion_Nodos/        # Teoría LAN, Topologías, Normas de Cableado
-├── 📁 RA02_Dispositivos_Interconex/  # Laboratorios de Switches, CLI Inicial, Verificación
-├── 📁 RA03_Montaje_DataCenter/       # Prácticas de Subnetting VLSM, Patch Panels, Racks
-├── 📁 RA04_Redes_Inalambricas/       # Configuración de APs, Seguridad WLAN (WPA3/WPA2)
-├── 📁 RA05_Configuracion_Core/       # Enrutamiento, Modelos OSI/TCPIP, Scripts CLI
-├── 📁 RA06_Soporte_Cableado/         # Plantillas de Órdenes de Servicio, Mantenimiento
-├── 📁 RA07_Resolucion_Incidencias/   # Prácticas avanzadas de aislamiento de fallos lógicos
-├── 📁 RA08_Investigacion_Lineas/     # Esquemas complejos, captura de tráfico, análisis
-└── 📁 RA09_Gestion_Seguimiento/      # Bitácoras de incidentes, Simulación de fallos múltiples
