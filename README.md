@@ -1,108 +1,146 @@
+# 🖥️ Agregar una Máquina Windows en GNS3
 
-
-## 📄 📚 Recursos de estudio
-
-### 🌐 Contenido IPv6 (SLAAC y DHCPv6)
-
-- 🔗 Sitio principal (repositorio universitario):  
-  https://irkr.fei.tuke.sk/
-
-- 🔗 📄 PDF: SLAAC y DHCPv6 (Presentación completa):  
-  https://irkr.fei.tuke.sk/PocitacoveSiete/_materialy/Prednasky/pred_6%20SLAAC%20and%20DHCPv6.pdf  
-
-- 🔗 🧪 Actividades Packet Tracer (CCNA):  
-  https://irkr.fei.tuke.sk/PocitacoveSiete/_materialy/Cvicenia/CCNA1_ITN_v7_PacketTracerActivity/  
-
-- 🔗 🌐 Explicación tipo módulo CCNA (web):  
-  https://itexamanswers.net/ccna-2-v7-0-curriculum-module-8-slaac-and-dhcpv6.html  
-
-- 🔗 📘 RFC oficial IPv6 (RFC 8200):  
-  https://www.lacnic.net/innovaportal/file/2751/1/rfc8200.pdf  
+Guía paso a paso para configurar y ejecutar una máquina virtual Windows dentro de GNS3 usando QEMU y TigerVNC.
 
 ---
 
-## 🤖 🚀 Automatización de Redes
+## 📋 Requisitos Previos
 
-### 📂 Repositorios y plataformas
+- GNS3 instalado y funcionando (con servidor local)
+- QEMU instalado (`qemu-system-x86_64`)
+- TigerVNC instalado (`tigervnc-viewer`)
+- Imagen ISO de Windows (en este ejemplo: `Win11_25H2_Spanish_x64_v2.iso`)
 
-- 🔗 Awesome Network Automation (colección completa):  
-  https://github.com/networktocode/awesome-network-automation  
+### Instalar TigerVNC (si no está instalado)
 
-- 🔗 Cisco DevNet Code (scripts oficiales):  
-  https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/python_code_samples_network/  
+```bash
+sudo apt install tigervnc-viewer
+```
 
-- 🔗 DevNet Cisco (laboratorios prácticos):  
-  https://github.com/RonaldPalacios/DevNet-Cisco  
-
-- 🔗 Netmiko (automatización por SSH):  
-  https://github.com/ktbyers/netmiko  
-
-- 🔗 Ansible para redes (documentación oficial):  
-  https://docs.ansible.com/projects/ansible/latest/network/  
-
-- 🔗 Cisco DevNet Learning (plataforma oficial):  
-  https://developer.cisco.com/learning/  
+> **Nota:** Sin TigerVNC instalado, GNS3 mostrará el error:
+> `Could not start VNC program with command 'vncviewer localhost:5901': [Errno 2] No such file or directory: 'vncviewer'`
 
 ---
 
-## 📚 📘 Libros y cursos gratuitos
+## 📥 Paso 1: Obtener la Imagen de Windows
 
-- 📗 Python for Network Engineers  
-  🔗 https://github.com/jonathan-cutrer/python-for-network-engineers  
+Puedes descargar imágenes compatibles con QEMU/KVM desde sitios especializados. Algunos formatos disponibles son:
 
-- 📘 Automate the Boring Stuff with Python  
-  🔗 https://automatetheboringstuff.com/  
+| Archivo | Tipo |
+|---|---|
+| win-10-x64-20H2v2.tgz | Windows 10 x64 |
+| win-11-x64-DEV.tgz | Windows 11 x64 Dev |
+| winserver-2019-R2-x64-rev3.tgz | Windows Server 2019 |
+| win10rs5-ltsc-kvm-ttys3.zip | Windows 10 LTSC KVM |
 
-- 📙 Network Automation with Python  
-  🔗 https://github.com/networkautomationbook/network-automation-book  
-
-- 📘 Documentación Netmiko  
-  🔗 https://ktbyers.github.io/netmiko/  
-
----
-
-## 📌 Descripción
-
-Este repositorio reúne recursos teóricos y prácticos sobre:
-
-- 🌐 Direccionamiento IPv6  
-- ⚙️ SLAAC (configuración automática)  
-- 📡 DHCPv6 Stateless y Stateful  
-- 🚩 Flags (M, O, A) en Router Advertisement  
-- 🔍 Neighbor Discovery Protocol (NDP)  
-- 🧪 Laboratorios CCNA  
-
-Además, incorpora materiales sobre **automatización de redes**, orientados al uso de herramientas modernas como:
-
-- Python  
-- Netmiko  
-- Ansible  
-- APIs (RESTCONF / NETCONF)  
+En este manual se usa la ISO oficial: `Win11_25H2_Spanish_x64_v2.iso`
 
 ---
 
-## 🎯 Uso en clase
+## ⚙️ Paso 2: Crear la Plantilla QEMU en GNS3
 
-Este material está diseñado como apoyo educativo para:
+1. Abre GNS3 y ve a **Edit → Preferences → QEMU → Qemu VMs**
+2. Haz clic en **New** para crear una nueva plantilla
+3. Configura los parámetros generales:
 
-- ✅ Comprender la configuración automática en IPv6  
-- ✅ Realizar prácticas en GNS3 o Packet Tracer  
-- ✅ Desarrollar habilidades en automatización de redes  
-- ✅ Fomentar el aprendizaje individual basado en competencias  
+| Parámetro | Valor |
+|---|---|
+| Template name | Windows |
+| Console type | **vnc** |
+| CPUs | 1 |
+| Memory | 2048 MB (mínimo) |
+| QEMU binary | qemu-system-x86_64 |
+| Linked base VM | True |
 
----
-
-## 🚀 Enfoque
-
-El repositorio sigue un enfoque:
-
-- Profesional  
-- Práctico  
-- Actualizado con tendencias de automatización  
-- Alineado con el modelo educativo STEAM  
+> ⚠️ **Importante:** Asegúrate de que el `Console type` sea **vnc** (no `telnet`). Con `telnet` la consola se conecta pero no muestra nada gráfico.
 
 ---
 
-## 📌 Nota
+## 💾 Paso 3: Configurar el Disco Duro (HDD)
 
-Los enlaces incluidos pertenecen a repositorios educativos, documentación técnica y plataformas oficiales que complementan el aprendizaje en redes modernas.
+### 3.1 Asignar la ISO de instalación
+
+En la pestaña **HDD** de la plantilla:
+
+- **HDA → Disk image:** selecciona la ISO de Windows (`Win11_25H2_Spanish_x64_v2.iso`)
+- **HDA → Disk interface:** `virtio`
+
+### 3.2 Crear un disco virtual QCOW2 para la instalación
+
+1. En la pestaña HDD, haz clic en **Create...** junto a HDB (o HDA si deseas reemplazar)
+2. Se abrirá el **Qemu image creator**:
+   - **Qemu-img binary:** `/bin/qemu-img (v8.2.2)`
+   - **Image format:** `Qcow2` ✅
+3. En la siguiente pantalla (Qcow2 options):
+   - **Preallocation:** `off`
+   - **Cluster size:** `<default>`
+   - **Lazy refcounts:** desactivado
+4. En la pantalla final (Size and location):
+   - **File location:** `Windows-hda.qcow2`
+   - **Disk size:** `30,000 MiB` (30 GB recomendado para Windows 11)
+5. Haz clic en **Finish**
+
+---
+
+## 🌐 Paso 4: Configurar la Red
+
+En la pestaña **Network** de la plantilla:
+
+| Parámetro | Valor |
+|---|---|
+| Adapters | 1 |
+| Name format | Ethernet{0} |
+| Type | e1000 |
+
+---
+
+## ▶️ Paso 5: Agregar y Arrancar la VM en un Proyecto
+
+1. En tu proyecto de GNS3, arrastra el nodo **Windows** desde el panel de dispositivos
+2. Haz clic derecho sobre el nodo → **Start**
+3. Una vez iniciado, haz clic derecho → **Console**
+
+> ⚠️ Si abres la consola antes de iniciar el nodo, verás el mensaje:
+> `This node must be started before a console can be opened`
+
+---
+
+## 🖥️ Paso 6: Conectarse por VNC
+
+Cuando el nodo esté corriendo, GNS3 abrirá automáticamente **TigerVNC** y verás el arranque de Windows:
+
+```
+QEMU (Windows-1) - TigerVNC
+```
+
+Aparecerá el logo de Windows 11 durante el proceso de instalación/arranque.
+
+---
+
+## 🔧 Solución de Problemas
+
+| Error | Causa | Solución |
+|---|---|---|
+| `vncviewer: No such file or directory` | TigerVNC no instalado | `sudo apt install tigervnc-viewer` |
+| `This node must be started before a console can be opened` | La VM no está encendida | Clic derecho → Start primero |
+| Consola muestra texto pero no gráficos | Console type en `telnet` | Cambiar a `vnc` en la plantilla |
+| La VM no arranca la ISO | Disco interface incorrecto | Usar `virtio` en HDA |
+
+---
+
+## 📝 Notas Adicionales
+
+- La primera vez que se ejecuta, Windows realizará el proceso de instalación completo desde la ISO
+- Se recomienda al menos **4 GB de RAM** en el host por VM de Windows activa
+- El disco QCOW2 usa espacio dinámico: solo ocupa lo que realmente se escribe
+- Puedes ver el consumo de recursos en `htop` — cada VM de Windows consume ~24% de CPU y ~3.8 GB de RAM durante el uso
+
+---
+
+## 🗂️ Estructura de Archivos
+
+```
+/home/francis/GNS3/images/QEMU/
+├── Win11_25H2_Spanish_x64_v2.iso   ← ISO de instalación
+└── Windows-hda.qcow2                ← Disco virtual (generado en paso 3.2)
+```
