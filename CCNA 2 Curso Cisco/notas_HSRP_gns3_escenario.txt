@@ -1,0 +1,86 @@
+============================================================
+NOTAS DEL ESCENARIO GNS3
+============================================================
+
+PROBLEMA 1 — vIOS-L2 sin interfaces
+------------------------------------------------------------
+Causa: Tipo de adaptador incorrecto (virtio-net-pci)
+
+Solución:
+1. Detener el nodo
+2. Click derecho -> Configure -> Network -> Configure custom adapters
+3. Cambiar tipo a: e1000e
+4. Nombre de interfaz: GigabitEthernet0/{0}
+5. Cantidad de adaptadores: 4
+6. Guardar e iniciar el nodo
+
+
+PROBLEMA 2 — Cloud1 con internet real
+------------------------------------------------------------
+Interfaz usada: enp3s0 (cable Ethernet)
+
+Pasos:
+1. Click derecho sobre Cloud1 -> Configure
+2. Seleccionar enp3s0 -> Click Add -> OK
+3. Conectar Cloud1 al router en el canvas
+
+Configuración en el router:
+  interface GigabitEthernet0/0
+   ip address dhcp
+   no shutdown
+
+Verificar:
+  show ip interface brief
+  show dhcp lease
+  ping 8.8.8.8
+
+
+PROBLEMA 3 — DNS en el router
+------------------------------------------------------------
+  ip domain-lookup
+  ip name-server 8.8.8.8
+  ip name-server 8.8.4.4
+
+Verificar:
+  ping google.com
+
+
+PROBLEMA 4 — DNS en VPCS (PC1)
+------------------------------------------------------------
+  ip dns 8.8.8.8
+
+Verificar:
+  ping google.com
+
+
+PROBLEMA 5 — Multiples routers al Cloud1
+------------------------------------------------------------
+El Cloud1 no permite duplicar interfaces.
+
+Solución: Usar un Ethernet Switch de GNS3 entre el Cloud y los routers:
+
+  [Cloud1] --- [Ethernet Switch GNS3] --- [R1]
+                                      --- [R2]
+                                      --- [R3]
+
+
+CONFIGURACION NAT (red interna con internet)
+------------------------------------------------------------
+  ip nat inside source list 1 interface GigabitEthernet2 overload
+  access-list 1 permit 172.16.10.0 0.0.0.255
+
+  interface GigabitEthernet2
+   ip nat outside
+
+  interface GigabitEthernet1
+   ip nat inside
+
+
+PROXIMOS PASOS SUGERIDOS
+------------------------------------------------------------
+- VLANs y enlaces Trunk
+- OSPF / EIGRP
+- ACLs
+- Servidores Docker (HTTP, DNS, FTP)
+
+============================================================
