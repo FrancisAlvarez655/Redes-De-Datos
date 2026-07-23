@@ -1,0 +1,60 @@
+Qué problema resuelve STP
+STP evita bucles de capa 2, pero también puede ser manipulado si alguien conecta un switch falso o un equipo que envía BPDUs para intentar influir en la topología. En un laboratorio como el tuyo, eso es especialmente importante en los puertos hacia PCs, porque esos puertos no deberían recibir BPDUs.
+
+1. PortFast y BPDU Guard
+PortFast hace que un puerto de acceso pase casi de inmediato a estado de forwarding, sin esperar la convergencia normal de STP. BPDU Guard protege ese puerto: si llega una BPDU, el puerto se apaga por seguridad y entra en estado err-disabled. Esta combinación es la más usada en puertos hacia usuarios finales.
+
+2. Configurar PortFast
+En tu topología, debes activarlo en los puertos que conectan a PCs, como los puertos de acceso de VLAN 10, VLAN 20 y VLAN 30. La idea es aplicarlo solo donde conectas dispositivos finales, no en enlaces troncal o entre switches.
+
+Ejemplo de configuración:
+
+bash
+conf t
+interface range fa0/1 - 24
+spanning-tree portfast
+end
+Si quieres activarlo globalmente en puertos de acceso, puedes usar una política más amplia, pero siempre revisando que no afecte enlaces troncales.
+
+3. Configurar BPDU Guard
+Puedes configurarlo por interfaz o de forma global para todos los puertos con PortFast. En un entorno de estudiante, la opción global suele ser más práctica porque reduce errores y refuerza la seguridad automáticamente.
+
+Ejemplo por interfaz:
+
+bash
+conf t
+interface fa0/1
+spanning-tree portfast
+spanning-tree bpduguard enable
+end
+Ejemplo global:
+
+bash
+conf t
+spanning-tree portfast bpduguard default
+end
+Con eso, cualquier puerto PortFast que reciba una BPDU quedará protegido de forma automática.
+
+4. Comprobador de sintaxis
+Para verificar que la configuración quedó bien, revisa estos comandos:
+
+bash
+show running-config interface fa0/1
+show spanning-tree interface fa0/1 detail
+show interfaces status
+show interfaces status err-disabled
+Si un puerto entra en err-disabled por BPDU Guard, normalmente tendrás que quitar la causa física y volver a levantar la interfaz con shutdown y no shutdown.
+
+Aplicado a tu diagrama
+En tu imagen, los enlaces entre switches son troncales y no deben llevar PortFast. Los puertos hacia PC1, PC2 y alpine-1 sí son puertos de acceso y son los candidatos correctos para PortFast + BPDU Guard. Esa es la parte más importante de tu práctica porque allí es donde se mitigan ataques STP comunes.
+
+Resumen práctico
+Usa PortFast solo en puertos hacia hosts finales.
+
+Activa BPDU Guard en esos puertos para bloquear switches no autorizados.
+
+No uses PortFast en enlaces troncal entre switches.
+
+Verifica con show y revisa si algún puerto quedó err-disabled.
+
+Si quieres, puedo convertir esto en una guía paso a paso para Packet Tracer o GNS3, o prepararte un mini-laboratorio con comandos exactos para tu topología.
